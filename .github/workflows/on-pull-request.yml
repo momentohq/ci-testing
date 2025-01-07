@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-user-permissions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get User Permission
+        id: checkAccess
+        uses: actions-cool/check-user-permission@v2
+        with:
+          require: write
+          username: ${{ github.triggering_actor }}
+      - name: Check User Permission
+        if: steps.checkAccess.outputs.require-result == 'false'
+        run: |
+          echo "${{ github.triggering_actor }} does not have permissions on this repo."
+          echo "Current permission level is ${{ steps.checkAccess.outputs.user-permission }}"
+          echo "Job originally triggered by ${{ github.actor }}"
+          exit 1
+
+  checkout-default:
+    needs: verify-user-permissions
+    name: Checkout action using default ref
+    runs-on: ubuntu-latest
+    env:
+      SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test secret access
+        run: |
+          if [[ "x${{ env.SUPER_SECRET }}" == "" ]]; then
+            echo "No access to secrets"
+          else
+            echo "Access to secrets!"
+            exit 1
+          fi
+
+  checkout-test-merge-commit:
+    needs: verify-user-permissions
+    name: Checkout action using default ref
+    runs-on: ubuntu-latest
+    env:
+      SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.merge_commit_sha }}
+
+      - name: Test secret access
+        run: |
+          if [[ "x${{ env.SUPER_SECRET }}" == "" ]]; then
+            echo "No access to secrets"
+          else
+            echo "Access to secrets!"
+            exit 1
+          fi
+
+
+
+
+
+
