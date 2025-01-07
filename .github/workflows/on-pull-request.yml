@@ -37,9 +37,9 @@ jobs:
         run: |
           if [[ "x${{ env.SUPER_SECRET }}" == "" ]]; then
             echo "No access to secrets"
+            exit 1
           else
             echo "Access to secrets!"
-            exit 1
           fi
 
   checkout-test-merge-commit:
@@ -59,9 +59,9 @@ jobs:
         run: |
           if [[ "x${{ env.SUPER_SECRET }}" == "" ]]; then
             echo "No access to secrets"
+            exit 1
           else
             echo "Access to secrets!"
-            exit 1
           fi
 
 
