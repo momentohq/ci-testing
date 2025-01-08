@@ -35,7 +35,7 @@ jobs:
 
       - name: Test secret access
         run: |
-          if [[ "x${{ env.SUPER_SECRET }}" == "" ]]; then
+          if [[ "${{ env.SUPER_SECRET }}" == "" ]]; then
             echo "No access to secrets"
             exit 1
           else
@@ -44,7 +44,7 @@ jobs:
 
   checkout-test-merge-commit:
     needs: verify-user-permissions
-    name: Checkout action using default ref
+    name: Checkout action using merge commit sha ref
     runs-on: ubuntu-latest
     env:
       SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
@@ -57,7 +57,7 @@ jobs:
 
       - name: Test secret access
         run: |
-          if [[ "x${{ env.SUPER_SECRET }}" == "" ]]; then
+          if [[ "${{ env.SUPER_SECRET }}" == "" ]]; then
             echo "No access to secrets"
             exit 1
           else
