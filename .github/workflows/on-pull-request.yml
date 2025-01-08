@@ -34,37 +34,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Test secret access
-        run: |
-          if [[ "${{ env.SUPER_SECRET }}" == "" ]]; then
-            echo "No access to secrets"
-            exit 1
-          else
-            echo "Access to secrets!"
-          fi
+        if: env.SUPER_SECRET == ''
+        run: 
+          echo "No access to secrets"
+          exit 1
 
-  checkout-test-merge-commit:
-    needs: verify-user-permissions
-    name: Checkout action using merge commit sha ref
-    runs-on: ubuntu-latest
-    env:
-      SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.merge_commit_sha }}
-
-      - name: Test secret access
-        run: |
-          if [[ "${{ env.SUPER_SECRET }}" == "" ]]; then
-            echo "No access to secrets"
-            exit 1
-          else
-            echo "Access to secrets!"
-          fi
-
-
+      - name: Secret access!
+        run: echo "Access to secrets!"
 
 
 
