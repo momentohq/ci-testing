@@ -42,6 +42,28 @@ jobs:
       - name: Secret access!
         run: echo "Access to secrets!"
 
+  checkout-with-ref:
+    needs: verify-user-permissions
+    name: Checkout action using a non-default ref
+    runs-on: ubuntu-latest
+    env:
+      SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Test secret access
+        if: env.SUPER_SECRET == ''
+        run: 
+          echo "No access to secrets"
+          exit 1
+
+      - name: Secret access!
+        run: echo "Access to secrets!"
+
 
 
 
