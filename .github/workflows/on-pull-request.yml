@@ -31,6 +31,8 @@ jobs:
           if [ -z "${{ github.event.pull_request.merge_commit_sha }}" ]; then
             echo "No merge commit sha found for this pull request."
             exit 1
+            else
+            echo "Merge commit sha found: ${{ github.event.pull_request.merge_commit_sha }}"
           fi
       
       - name: Check if head sha exists
@@ -38,6 +40,8 @@ jobs:
           if [ -z "${{ github.event.pull_request.head.sha }}" ]; then
             echo "No head sha found for this pull request."
             exit 1
+            else
+            echo "Head sha found: ${{ github.event.pull_request.head.sha }}"
           fi
 
   checkout-default:
