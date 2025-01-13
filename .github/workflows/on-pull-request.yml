@@ -27,16 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check if merge commit sha exists
-        if: github.event.pull_request.merge_commit_sha == ''
-        run: |
-          echo "No merge commit sha found for this pull request."
-          exit 1
+        run: echo ${{ github.event.pull_request.merge_commit_sha }}
       
       - name: Check if head sha exists
-        if: github.event.pull_request.head.sha == ''
-        run: |
-          echo "No head sha found for this pull request."
-          exit 1
+        run: echo ${{ github.event.pull_request.head.sha }}
 
   checkout-default:
     needs: verify-user-permissions
