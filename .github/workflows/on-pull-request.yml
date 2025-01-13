@@ -22,6 +22,22 @@ jobs:
           echo "Job originally triggered by ${{ github.actor }}"
           exit 1
 
+  check-commits-exists:
+    needs: verify-user-permissions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if merge commit sha exists
+        if: github.event.pull_request.merge_commit_sha == ''
+        run: |
+          echo "No merge commit sha found for this pull request."
+          exit 1
+      
+      - name: Check if head sha exists
+        if: github.event.pull_request.head.sha == ''
+        run: |
+          echo "No head sha found for this pull request."
+          exit 1
+
   checkout-default:
     needs: verify-user-permissions
     name: Checkout action using default ref
@@ -53,7 +69,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.event.pull_request.head.sha }}
 
       - name: Test secret access
         if: env.SUPER_SECRET == ''
